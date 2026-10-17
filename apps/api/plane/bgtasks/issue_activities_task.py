@@ -1583,6 +1583,14 @@ def issue_activity(
         # Save all the values to database
         issue_activities_created = IssueActivity.objects.bulk_create(issue_activities)
 
+        # flow-desk: mirror state / labels / comment into the serial outbox.
+        try:
+            from plane.flow_desk.outbox import record_from_activities
+
+            record_from_activities(issue_activities_created, issue_id, actor_id)
+        except Exception as flow_desk_exc:  # noqa: BLE001
+            log_exception(flow_desk_exc)
+
         if notification:
             notifications.delay(
                 type=type,

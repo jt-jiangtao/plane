@@ -25,7 +25,7 @@
       "type": "string",
       "enum": ["agent", "ci", "ui-check", "quality", "signal"]
     },
-    "adapter": { "type": "string", "enum": ["codex", "cursor"] },
+    "adapter": { "type": "string", "enum": ["codex", "cursor", "fake"] },
     "readOnly": { "type": "boolean" },
     "ci": {
       "type": "object",
