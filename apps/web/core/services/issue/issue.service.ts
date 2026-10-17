@@ -14,6 +14,7 @@ import type {
   TIssue,
   TIssueActivity,
   TIssueLink,
+  TIssueRelationTypes,
   TIssueServiceType,
   TIssuesResponse,
   TIssueSubIssues,
@@ -175,7 +176,7 @@ export class IssueService extends APIService {
     issueId: string,
     data: {
       related_list: Array<{
-        relation_type: "duplicate" | "relates_to" | "blocked_by";
+        relation_type: TIssueRelationTypes;
         related_issue: string;
       }>;
       relation?: "blocking" | null;

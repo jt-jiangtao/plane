@@ -11,4 +11,10 @@ export const REVERSE_RELATIONS: { [key in TIssueRelationTypes]: TIssueRelationTy
   blocking: "blocked_by",
   relates_to: "relates_to",
   duplicate: "duplicate",
+  originated_from: "originates",
+  originates: "originated_from",
+  follow_up: "followed_by",
+  followed_by: "follow_up",
+  discovered_in: "discovers",
+  discovers: "discovered_in",
 };

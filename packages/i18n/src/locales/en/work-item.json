@@ -193,7 +193,13 @@
       "finish_before": "Finishes Before",
       "finish_after": "Finishes After",
       "implements": "Implements",
-      "implemented_by": "Implemented By"
+      "implemented_by": "Implemented By",
+      "originated_from": "Originated from",
+      "originates": "Originates",
+      "follow_up": "Follow up",
+      "followed_by": "Followed by",
+      "discovered_in": "Discovered in",
+      "discovers": "Discovers"
     },
     "copy_link": "Copy work item link",
     "delete": {

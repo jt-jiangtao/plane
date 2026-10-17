@@ -12,6 +12,12 @@ def get_inverse_relation(relation_type):
         "finish_before": "finish_after",
         "implemented_by": "implements",
         "implements": "implemented_by",
+        "originated_from": "originates",
+        "originates": "originated_from",
+        "follow_up": "followed_by",
+        "followed_by": "follow_up",
+        "discovered_in": "discovers",
+        "discovers": "discovered_in",
     }
     return relation_mapping.get(relation_type, relation_type)
 
@@ -27,6 +33,12 @@ def get_actual_relation(relation_type):
         "finish_before": "finish_before",
         "implemented_by": "implemented_by",
         "implements": "implemented_by",
+        "originated_from": "originated_from",
+        "originates": "originated_from",
+        "follow_up": "follow_up",
+        "followed_by": "follow_up",
+        "discovered_in": "discovered_in",
+        "discovers": "discovered_in",
     }
 
     return actual_relation.get(relation_type, relation_type)

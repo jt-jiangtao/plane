@@ -276,6 +276,10 @@ class IssueRelationChoices(models.TextChoices):
     START_BEFORE = "start_before", "Start Before"
     FINISH_BEFORE = "finish_before", "Finish Before"
     IMPLEMENTED_BY = "implemented_by", "Implemented By"
+    # Flow Desk: 源自 / 跟进 / 发现于
+    ORIGINATED_FROM = "originated_from", "Originated From"
+    FOLLOW_UP = "follow_up", "Follow Up"
+    DISCOVERED_IN = "discovered_in", "Discovered In"
 
 
 # Bidirectional relation pairs: (forward, reverse)
@@ -287,6 +291,9 @@ IssueRelationChoices._RELATION_PAIRS = (
     ("start_before", "start_after"),
     ("finish_before", "finish_after"),
     ("implemented_by", "implements"),
+    ("originated_from", "originates"),
+    ("follow_up", "followed_by"),
+    ("discovered_in", "discovers"),
 )
 
 # Generate reverse mapping from pairs

@@ -185,6 +185,12 @@
     },
     "relation": {
       "relates_to": "关联到",
+      "originated_from": "源自",
+      "originates": "引出",
+      "follow_up": "跟进",
+      "followed_by": "被跟进",
+      "discovered_in": "发现于",
+      "discovers": "发现了",
       "duplicate": "重复于",
       "blocked_by": "被阻止于",
       "blocking": "阻止",
