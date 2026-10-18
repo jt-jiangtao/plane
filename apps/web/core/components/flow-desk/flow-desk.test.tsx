@@ -118,6 +118,34 @@ describe("ConfirmPanel (P13–P18)", () => {
   });
 });
 
+describe("SettingsPage autonomy (P47)", () => {
+  it("P47: shows levels/stats; blocks non-skippable at level 2", async () => {
+    const onSaveAutonomy = vi.fn(async () => ({ ok: true }));
+    render(
+      <SettingsPage
+        isAdmin
+        killSwitch={false}
+        configText="areas: {}"
+        cursorKeySet
+        autonomyRows={[
+          { area: "web", flowType: "docs", level: 1, canLevel2: true, recentPassRate: 0.95, recentEscapes: 0 },
+          { area: "web", flowType: "bug-standard", level: 1, canLevel2: false },
+        ]}
+        onToggleKillSwitch={vi.fn()}
+        onSaveConfig={vi.fn(async () => ({ ok: true }))}
+        onSaveCursorKey={vi.fn(async () => ({ ok: true }))}
+        onSaveAutonomy={onSaveAutonomy}
+      />
+    );
+    expect(screen.getByTestId("settings-autonomy")).toBeTruthy();
+    expect(screen.getByTestId("autonomy-stats-web-docs").textContent).toMatch(/0\.95/);
+    fireEvent.change(screen.getByTestId("autonomy-level-web-bug-standard"), { target: { value: "2" } });
+    fireEvent.click(screen.getByTestId("autonomy-save"));
+    expect(screen.getByTestId("autonomy-error").textContent).toMatch(/cannot be level 2/);
+    expect(onSaveAutonomy).not.toHaveBeenCalled();
+  });
+});
+
 describe("DispatchDialog (P19–P22)", () => {
   it("P21: missing fields marked", async () => {
     render(

@@ -1,13 +1,24 @@
 import React, { useState } from "react";
 
+export type AutonomyRow = {
+  area: string;
+  flowType: string;
+  level: number;
+  canLevel2: boolean;
+  recentPassRate?: number;
+  recentEscapes?: number;
+};
+
 export type SettingsPageProps = {
   isAdmin: boolean;
   killSwitch: boolean;
   configText: string;
   cursorKeySet: boolean;
+  autonomyRows?: AutonomyRow[];
   onToggleKillSwitch: (on: boolean) => Promise<void>;
   onSaveConfig: (text: string) => Promise<{ ok: boolean; position?: string }>;
   onSaveCursorKey: (key: string) => Promise<{ ok: boolean; error?: string }>;
+  onSaveAutonomy?: (rows: AutonomyRow[]) => Promise<{ ok: boolean; error?: string }>;
 };
 
 export function SettingsPage(props: SettingsPageProps) {
@@ -16,6 +27,8 @@ export function SettingsPage(props: SettingsPageProps) {
   const [configError, setConfigError] = useState<string | null>(null);
   const [cursorKey, setCursorKey] = useState("");
   const [cursorSet, setCursorSet] = useState(props.cursorKeySet);
+  const [autonomy, setAutonomy] = useState<AutonomyRow[]>(props.autonomyRows ?? []);
+  const [autonomyError, setAutonomyError] = useState<string | null>(null);
 
   if (!props.isAdmin) return null;
 
@@ -78,6 +91,52 @@ export function SettingsPage(props: SettingsPageProps) {
           </>
         )}
       </div>
+      {autonomy.length > 0 ? (
+        <div data-testid="settings-autonomy">
+          {autonomy.map((row, idx) => (
+            <div key={`${row.area}-${row.flowType}`} data-testid={`autonomy-row-${row.area}-${row.flowType}`}>
+              <span>
+                {row.area}/{row.flowType}
+              </span>
+              <input
+                data-testid={`autonomy-level-${row.area}-${row.flowType}`}
+                type="number"
+                min={0}
+                max={2}
+                value={row.level}
+                onChange={(e) => {
+                  const next = [...autonomy];
+                  next[idx] = { ...row, level: Number(e.target.value) };
+                  setAutonomy(next);
+                }}
+              />
+              <span data-testid={`autonomy-stats-${row.area}-${row.flowType}`}>
+                pass={row.recentPassRate ?? "-"} escapes={row.recentEscapes ?? "-"}
+              </span>
+            </div>
+          ))}
+          <button
+            type="button"
+            data-testid="autonomy-save"
+            onClick={async () => {
+              const invalid = autonomy.find((r) => r.level === 2 && !r.canLevel2);
+              if (invalid) {
+                setAutonomyError(`${invalid.flowType} cannot be level 2`);
+                return;
+              }
+              if (props.onSaveAutonomy) {
+                const r = await props.onSaveAutonomy(autonomy);
+                setAutonomyError(r.ok ? null : r.error ?? "save failed");
+              } else {
+                setAutonomyError(null);
+              }
+            }}
+          >
+            保存放权
+          </button>
+          {autonomyError ? <p data-testid="autonomy-error">{autonomyError}</p> : null}
+        </div>
+      ) : null}
     </div>
   );
 }
