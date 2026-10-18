@@ -13,6 +13,11 @@
     "area": { "type": "string", "minLength": 1 },
     "branch": { "type": "string", "minLength": 1 },
     "message": { "type": "string" },
-    "taskId": { "type": "string" }
+    "taskId": { "type": "string" },
+    "kind": {
+      "type": "string",
+      "enum": ["agent", "merge", "ci", "回滚"],
+      "description": "提交种类；回滚对应产品文案「回滚」"
+    }
   }
 }
