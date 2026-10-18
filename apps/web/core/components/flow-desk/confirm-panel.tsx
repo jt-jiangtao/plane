@@ -1,11 +1,18 @@
 import React, { useState } from "react";
 
+export type ConfirmVisualChange = {
+  page: string;
+  before: string;
+  after: string;
+};
+
 export type ConfirmPanelProps = {
   visible: boolean;
   options: Array<{ id: string; label: string; requiresReason?: boolean }>;
   submitting?: boolean;
   result?: string;
   error?: string;
+  visualChanges?: ConfirmVisualChange[];
   onSubmit: (optionId: string, reason?: string) => Promise<void> | void;
 };
 
@@ -33,8 +40,21 @@ export function ConfirmPanel(props: ConfirmPanelProps) {
     }
   };
 
+  const diffs = props.visualChanges ?? [];
+
   return (
     <div data-testid="confirm-panel">
+      {diffs.length > 0 ? (
+        <div data-testid="confirm-visual-diffs">
+          {diffs.map((d) => (
+            <div key={d.page} data-testid={`confirm-visual-page-${d.page}`}>
+              <span>{d.page}</span>
+              <img data-testid={`confirm-visual-before-${d.page}`} src={d.before} alt={`${d.page} before`} />
+              <img data-testid={`confirm-visual-after-${d.page}`} src={d.after} alt={`${d.page} after`} />
+            </div>
+          ))}
+        </div>
+      ) : null}
       {props.options.map((opt) => (
         <div key={opt.id}>
           {opt.requiresReason ? (

@@ -100,6 +100,22 @@ describe("ConfirmPanel (P13–P18)", () => {
     expect(onSubmit).toHaveBeenCalledTimes(1);
     resolve();
   });
+
+  it("P43: shows before/after screenshot diffs on merge/acceptance confirm", () => {
+    render(
+      <ConfirmPanel
+        visible
+        options={[{ id: "approve", label: "合入" }]}
+        onSubmit={vi.fn()}
+        visualChanges={[
+          { page: "/", before: "data:image/png;base64,YmVmb3Jl", after: "data:image/png;base64,YWZ0ZXI=" },
+        ]}
+      />
+    );
+    expect(screen.getByTestId("confirm-visual-diffs")).toBeTruthy();
+    expect(screen.getByTestId("confirm-visual-before-/")).toBeTruthy();
+    expect(screen.getByTestId("confirm-visual-after-/")).toBeTruthy();
+  });
 });
 
 describe("DispatchDialog (P19–P22)", () => {
