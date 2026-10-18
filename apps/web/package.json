@@ -14,7 +14,9 @@
     "check:types": "react-router typegen && tsc --noEmit",
     "check:format": "oxfmt --check .",
     "fix:lint": "oxlint --fix .",
-    "fix:format": "oxfmt ."
+    "fix:format": "oxfmt .",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@atlaskit/pragmatic-drag-and-drop": "catalog:",
@@ -70,7 +72,9 @@
     "smooth-scroll-into-view-if-needed": "catalog:",
     "swr": "catalog:",
     "use-font-face-observer": "catalog:",
-    "uuid": "catalog:"
+    "uuid": "catalog:",
+    "@xyflow/react": "^12.6.0",
+    "@dagrejs/dagre": "^1.1.4"
   },
   "devDependencies": {
     "@plane/tailwind-config": "workspace:*",
@@ -85,7 +89,13 @@
     "@types/react-dom": "catalog:",
     "dotenv": "catalog:",
     "typescript": "catalog:",
-    "vite": "catalog:",
-    "vite-tsconfig-paths": "catalog:"
+    "vite": "5.4.19",
+    "vite-tsconfig-paths": "catalog:",
+    "vitest": "3.2.7",
+    "@vitest/coverage-v8": "3.2.7",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/user-event": "^14.6.1",
+    "jsdom": "^26.1.0"
   }
 }
