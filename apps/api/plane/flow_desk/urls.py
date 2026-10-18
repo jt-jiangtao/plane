@@ -7,6 +7,7 @@ from django.urls import path
 from plane.flow_desk.views import (
     FlowDeskCredentialsProxy,
     FlowDeskDecisionsProxy,
+    FlowDeskFindingsProxy,
     FlowDeskInternalEventsEndpoint,
     FlowDeskSettingsProxy,
     FlowDeskStatusProxy,
@@ -37,5 +38,10 @@ urlpatterns = [
         "workspaces/<str:slug>/projects/<uuid:project_id>/flow-desk/credentials/cursor/",
         FlowDeskCredentialsProxy.as_view(),
         name="flow-desk-credentials-proxy",
+    ),
+    path(
+        "workspaces/<str:slug>/projects/<uuid:project_id>/flow-desk/findings/",
+        FlowDeskFindingsProxy.as_view(),
+        name="flow-desk-findings-proxy",
     ),
 ]

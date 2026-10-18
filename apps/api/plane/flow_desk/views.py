@@ -146,3 +146,7 @@ class FlowDeskStatusProxy(FlowDeskProxyEndpoint):
 
 class FlowDeskCredentialsProxy(FlowDeskProxyEndpoint):
     module_path = "/flow-desk/credentials/cursor"
+
+
+class FlowDeskFindingsProxy(FlowDeskProxyEndpoint):
+    module_path = "/flow-desk/findings"
