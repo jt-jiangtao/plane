@@ -10,6 +10,7 @@ import { DispatchDialog } from "./dispatch-dialog";
 import { StatusSidebar } from "./status-sidebar";
 import { SettingsPage } from "./settings-page";
 import { LiveOutput } from "./live-output";
+import { MetricsDashboard } from "./metrics-dashboard";
 
 describe("FlowView (P6–P12)", () => {
   it("P6/P7: ready shows nodes with status/attempt and highlights current", () => {
@@ -115,6 +116,61 @@ describe("ConfirmPanel (P13–P18)", () => {
     expect(screen.getByTestId("confirm-visual-diffs")).toBeTruthy();
     expect(screen.getByTestId("confirm-visual-before-/")).toBeTruthy();
     expect(screen.getByTestId("confirm-visual-after-/")).toBeTruthy();
+  });
+});
+
+describe("MetricsDashboard (P44–P45)", () => {
+  it("P44: ready shows five metric blocks and filters", () => {
+    render(
+      <MetricsDashboard
+        state="ready"
+        areas={["web"]}
+        flowTypes={["bug-standard"]}
+        metrics={{
+          handlingTime: { medianMs: 100, p90Ms: 200 },
+          confirmPassRate: { rate: 0.9 },
+          rejectReasons: { counts: { 实现错误: 1 }, recent: [] },
+          escapeRate: { rate: 0.1, escapes: 1, merges: 10 },
+          agentDuration: { medianMs: 50 },
+        }}
+      />
+    );
+    expect(screen.getByTestId("metrics-dashboard")).toBeTruthy();
+    expect(screen.getByTestId("metrics-handling")).toBeTruthy();
+    expect(screen.getByTestId("metrics-pass-rate")).toBeTruthy();
+    expect(screen.getByTestId("metrics-rejects")).toBeTruthy();
+    expect(screen.getByTestId("metrics-escape")).toBeTruthy();
+    expect(screen.getByTestId("metrics-agent")).toBeTruthy();
+    expect(screen.getByTestId("metrics-filter-area")).toBeTruthy();
+  });
+
+  it("P45: empty and error+retry", () => {
+    const onRetry = vi.fn();
+    const { rerender } = render(<MetricsDashboard state="empty" />);
+    expect(screen.getByTestId("metrics-empty")).toBeTruthy();
+    rerender(<MetricsDashboard state="error" error="boom" onRetry={onRetry} />);
+    fireEvent.click(screen.getByTestId("metrics-retry"));
+    expect(onRetry).toHaveBeenCalled();
+  });
+});
+
+describe("ConfirmPanel reject category (P46)", () => {
+  it("P46: reject requires category and reason", async () => {
+    const onSubmit = vi.fn();
+    render(
+      <ConfirmPanel
+        visible
+        requireRejectCategory
+        options={[{ id: "reject", label: "退回", requiresReason: true }]}
+        onSubmit={onSubmit}
+      />
+    );
+    expect((screen.getByTestId("confirm-option-reject") as HTMLButtonElement).disabled).toBe(true);
+    fireEvent.change(screen.getByTestId("confirm-category-reject"), { target: { value: "实现错误" } });
+    fireEvent.change(screen.getByTestId("confirm-reason-reject"), { target: { value: "缺测" } });
+    expect((screen.getByTestId("confirm-option-reject") as HTMLButtonElement).disabled).toBe(false);
+    fireEvent.click(screen.getByTestId("confirm-option-reject"));
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith("reject", "缺测", "实现错误"));
   });
 });
 
