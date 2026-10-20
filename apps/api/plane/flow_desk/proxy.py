@@ -53,6 +53,13 @@ def module_base_url() -> str:
 
 
 def service_token() -> str:
+    if os.environ.get("FLOW_DESK_DESKTOP_MODE") == "true":
+        from pathlib import Path
+        try:
+            location = os.environ.get("FLOW_DESK_DESKTOP_SECRET_FILE", "/tmp/flow-desk-desktop-token")
+            return Path(location).read_text().strip()
+        except OSError:
+            return ""
     return os.environ.get("FLOW_DESK_SERVICE_TOKEN") or getattr(
         __import__("django.conf", fromlist=["settings"]).settings,
         "FLOW_DESK_SERVICE_TOKEN",
