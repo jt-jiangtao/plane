@@ -51,6 +51,7 @@ export const coreRoutes: RouteConfigEntry[] = [
     // WORKSPACE-SCOPED ROUTES
     // ======================================================================
     layout("./(all)/[workspaceSlug]/layout.tsx", [
+      route(":workspaceSlug/desktop", "./(all)/[workspaceSlug]/desktop/page.tsx"),
       // ====================================================================
       // PROJECTS APP SECTION - WORKSPACE LEVEL ROUTES
       // ====================================================================
@@ -262,6 +263,14 @@ export const coreRoutes: RouteConfigEntry[] = [
 
         layout("./(all)/[workspaceSlug]/(settings)/settings/(workspace)/layout.tsx", [
           route(":workspaceSlug/settings", "./(all)/[workspaceSlug]/(settings)/settings/(workspace)/page.tsx"),
+          route(
+            ":workspaceSlug/settings/flow-desk",
+            "./(all)/[workspaceSlug]/(settings)/settings/(workspace)/flow-desk/page.tsx"
+          ),
+          route(
+            ":workspaceSlug/settings/flow-desk/orchestrator-flows",
+            "./(all)/[workspaceSlug]/(settings)/settings/(workspace)/flow-desk/orchestrator-flows/page.tsx"
+          ),
           route(
             ":workspaceSlug/settings/members",
             "./(all)/[workspaceSlug]/(settings)/settings/(workspace)/members/page.tsx"

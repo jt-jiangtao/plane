@@ -21,6 +21,8 @@
     "doctor": "npx react-doctor@latest"
   },
   "devDependencies": {
+    "@oxfmt/binding-darwin-arm64": "0.35.0",
+    "@oxlint/binding-darwin-arm64": "1.51.0",
     "@rolldown/binding-darwin-arm64": "^1.0.3",
     "husky": "catalog:",
     "lint-staged": "catalog:",
