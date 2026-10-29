@@ -484,6 +484,11 @@
         "heading": "Scripts",
         "new_script": "New Script",
         "description": "Automate your workflows with custom scripts and automation rules."
+      },
+      "flow_desk": {
+        "title": "Orchestrator flows",
+        "heading": "Orchestrator flows",
+        "description": "Edit orchestrator YAML flows (Scheme B). n8n is legacy only."
       }
     },
     "empty_state": {

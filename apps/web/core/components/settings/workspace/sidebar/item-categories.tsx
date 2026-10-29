@@ -49,10 +49,11 @@ export const WorkspaceSettingsSidebarItemCategories = observer(function Workspac
             </div>
             <div className="flex flex-col">
               {accessibleItems.map((item) => {
+                const current = pathname.endsWith("/") ? pathname : `${pathname}/`;
                 const isItemActive =
                   item.href === "/settings"
-                    ? pathname === `/${workspaceSlug}${item.href}/`
-                    : new RegExp(`^/${workspaceSlug}${item.href}/`).test(pathname);
+                    ? current === `/${workspaceSlug}${item.href}/`
+                    : new RegExp(`^/${workspaceSlug}${item.href}/`).test(current);
 
                 return (
                   <SettingsSidebarItem

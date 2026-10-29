@@ -484,6 +484,11 @@
         "heading": "脚本",
         "new_script": "新建脚本",
         "description": "使用自定义脚本和自动化规则自动化您的工作流程。"
+      },
+      "flow_desk": {
+        "title": "编排流程",
+        "heading": "编排流程",
+        "description": "编辑 orchestrator YAML 流程（方案 B）。n8n 仅为旧兼容。"
       }
     },
     "empty_state": {
