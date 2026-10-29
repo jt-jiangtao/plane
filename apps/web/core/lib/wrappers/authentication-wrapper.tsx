@@ -5,6 +5,9 @@
  */
 
 import type { ReactNode } from "react";
+import { useEffect, useState } from "react";
+import { DesktopWorkbench } from "@/components/flow-desk/desktop-workbench";
+import { desktopApi, desktopPathAllowed } from "@/services/flow-desk/workbench";
 import { observer } from "mobx-react";
 import { useSearchParams, usePathname } from "next/navigation";
 import useSWR from "swr";
@@ -47,6 +50,25 @@ export const AuthenticationWrapper = observer(function AuthenticationWrapper(pro
     shouldRetryOnError: false,
   });
 
+  const [desktopRecovery, setDesktopRecovery] = useState<"idle" | "loading" | "error">("idle");
+  const desktop = desktopApi();
+  useEffect(() => {
+    if (desktop && !isUserSWRLoading && !isUserLoading && !currentUser?.id && desktopRecovery === "idle") {
+      setDesktopRecovery("loading");
+      void desktop
+        .recoverSession()
+        .then((result) => {
+          if (result.ok) {
+            window.location.reload();
+            return undefined;
+          }
+          setDesktopRecovery("error");
+          return undefined;
+        })
+        .catch(() => setDesktopRecovery("error"));
+    }
+  }, [desktop, isUserSWRLoading, isUserLoading, currentUser?.id, desktopRecovery]);
+
   const isUserOnboard =
     currentUserProfile?.is_onboarded ||
     (currentUserProfile?.onboarding_step?.profile_complete &&
@@ -78,10 +100,24 @@ export const AuthenticationWrapper = observer(function AuthenticationWrapper(pro
     return redirectionRoute;
   };
 
+  if (desktop && !desktopPathAllowed(pathname ?? "")) return <DesktopWorkbench>{null}</DesktopWorkbench>;
+
   if ((isUserSWRLoading || isUserLoading || workspacesLoader) && !currentUser?.id)
     return (
       <div className="relative flex h-screen w-full items-center justify-center">
         <LogoSpinner />
+      </div>
+    );
+
+  if (desktop && !currentUser?.id)
+    return (
+      <div role="status" className="flex h-screen flex-col items-center justify-center gap-4 bg-canvas text-secondary">
+        <p>{desktopRecovery === "error" ? "无法连接本机服务" : "正在恢复工作区连接…"}</p>
+        {desktopRecovery === "error" && (
+          <button type="button" onClick={() => setDesktopRecovery("idle")}>
+            重试
+          </button>
+        )}
       </div>
     );
 

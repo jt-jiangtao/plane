@@ -5,8 +5,10 @@
  */
 
 // components
+import { useEffect, useState, type CSSProperties } from "react";
 import { observer } from "mobx-react";
 import { useParams, usePathname } from "next/navigation";
+import { desktopApi } from "@/services/flow-desk/workbench";
 import { cn } from "@plane/utils";
 import { TopNavPowerK } from "@/components/navigation";
 import { HelpMenuRoot } from "@/components/workspace/sidebar/help-section/root";
@@ -20,6 +22,7 @@ import useSWR from "swr";
 import { useWorkspaceNotifications } from "@/hooks/store/notifications";
 // local imports
 import { StarUsOnGitHubLink } from "@/app/(all)/[workspaceSlug]/(projects)/star-us-link";
+import { DesktopHistoryButtons } from "@/components/flow-desk/desktop-history";
 
 export const TopNavigationRoot = observer(function TopNavigationRoot() {
   // router
@@ -31,6 +34,10 @@ export const TopNavigationRoot = observer(function TopNavigationRoot() {
   const { preferences } = useAppRailPreferences();
 
   const showLabel = preferences.displayMode === "icon_with_label";
+  const api = desktopApi();
+  const [fullscreen, setFullscreen] = useState(false);
+  useEffect(() => api?.onWindowState((next) => setFullscreen(next.fullscreen)), [api]);
+  const macInset = api?.platform === "darwin" && !fullscreen;
 
   // Fetch notification count
   useSWR(
@@ -44,6 +51,21 @@ export const TopNavigationRoot = observer(function TopNavigationRoot() {
     ? unreadNotificationsCount.mention_unread_notifications_count
     : unreadNotificationsCount.total_unread_notifications_count;
 
+  const noDrag = macInset ? ({ WebkitAppRegion: "no-drag" } as CSSProperties) : undefined;
+  if (api)
+    return (
+      <div
+        className={cn(
+          "z-[27] flex h-12 w-full items-center border-b border-subtle bg-surface-1",
+          macInset ? "pl-24" : "px-3"
+        )}
+        style={macInset ? ({ WebkitAppRegion: "drag" } as CSSProperties) : undefined}
+      >
+        <div className="flex items-center" style={noDrag}>
+          <DesktopHistoryButtons />
+        </div>
+      </div>
+    );
   return (
     <div
       className={cn("z-[27] flex min-h-10 w-full items-center bg-canvas px-3.5 transition-all duration-300", {
@@ -51,15 +73,15 @@ export const TopNavigationRoot = observer(function TopNavigationRoot() {
       })}
     >
       {/* Workspace Menu */}
-      <div className="flex-1 shrink-0">
+      <div className="flex flex-1 shrink-0 items-center gap-1">
         <WorkspaceMenuRoot variant="top-navigation" />
       </div>
       {/* Power K Search */}
-      <div className="shrink-0">
+      <div className="shrink-0" style={noDrag}>
         <TopNavPowerK />
       </div>
       {/* Additional Actions */}
-      <div className="flex flex-1 shrink-0 items-center justify-end gap-1">
+      <div className="flex flex-1 shrink-0 items-center justify-end gap-1" style={noDrag}>
         <Tooltip tooltipContent="Inbox" position="bottom">
           <AppSidebarItem
             variant="link"

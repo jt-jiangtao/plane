@@ -11,6 +11,9 @@ import { cn } from "@plane/utils";
 import { AppRailRoot } from "@/components/navigation";
 import { useAppRailVisibility } from "@/lib/app-rail";
 import { TopNavigationRoot } from "@/components/navigation/top-navigation-root";
+import { DesktopHistoryProvider } from "@/components/flow-desk/desktop-history";
+import { DesktopWorkbench } from "@/components/flow-desk/desktop-workbench";
+import { desktopApi } from "@/services/flow-desk/workbench";
 
 export const WorkspaceContentWrapper = observer(function WorkspaceContentWrapper({
   children,
@@ -19,6 +22,18 @@ export const WorkspaceContentWrapper = observer(function WorkspaceContentWrapper
 }) {
   // Use the context to determine if app rail should render
   const { shouldRenderAppRail } = useAppRailVisibility();
+
+  if (desktopApi())
+    return (
+      <DesktopHistoryProvider>
+        <div className="relative flex size-full flex-col overflow-hidden bg-canvas">
+          <TopNavigationRoot />
+          <div className="relative min-h-0 flex-1 overflow-hidden">
+            <DesktopWorkbench>{children}</DesktopWorkbench>
+          </div>
+        </div>
+      </DesktopHistoryProvider>
+    );
 
   return (
     <div className="relative flex size-full flex-col overflow-hidden bg-canvas transition-all duration-300 ease-in-out">
